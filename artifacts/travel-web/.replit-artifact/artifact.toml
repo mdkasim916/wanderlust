@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "Travel Website"
+version = "1.0.0"
+id = "artifacts/travel-web"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 23808
+
+[services.development]
+run = "pnpm --filter @workspace/travel-web run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/travel-web", "run", "build" ]
+publicDir = "artifacts/travel-web/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "23808"
+BASE_PATH = "/"

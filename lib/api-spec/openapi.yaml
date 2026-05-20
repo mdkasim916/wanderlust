@@ -3,20 +3,27 @@ info:
   # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: Travel Website API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: destinations
+    description: Travel destinations and packages
+  - name: bookings
+    description: Trip bookings
+  - name: testimonials
+    description: Customer reviews
+  - name: stats
+    description: Site statistics
 paths:
   /healthz:
     get:
       operationId: healthCheck
       tags: [health]
       summary: Health check
-      description: Returns server health status
       responses:
         "200":
           description: Healthy
@@ -24,6 +31,158 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /destinations:
+    get:
+      operationId: listDestinations
+      tags: [destinations]
+      summary: List all destinations with optional filters
+      parameters:
+        - name: category
+          in: query
+          schema:
+            type: string
+        - name: minPrice
+          in: query
+          schema:
+            type: number
+        - name: maxPrice
+          in: query
+          schema:
+            type: number
+        - name: search
+          in: query
+          schema:
+            type: string
+      responses:
+        "200":
+          description: List of destinations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Destination"
+
+  /destinations/featured:
+    get:
+      operationId: listFeaturedDestinations
+      tags: [destinations]
+      summary: Get top-rated featured destinations
+      responses:
+        "200":
+          description: Featured destinations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Destination"
+
+  /destinations/{id}:
+    get:
+      operationId: getDestination
+      tags: [destinations]
+      summary: Get destination by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Destination details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Destination"
+        "404":
+          description: Not found
+
+  /bookings:
+    get:
+      operationId: listBookings
+      tags: [bookings]
+      summary: List all bookings (dashboard)
+      responses:
+        "200":
+          description: List of bookings
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Booking"
+    post:
+      operationId: createBooking
+      tags: [bookings]
+      summary: Create a new booking
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/BookingInput"
+      responses:
+        "201":
+          description: Booking created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Booking"
+        "400":
+          description: Validation error
+
+  /bookings/{id}:
+    get:
+      operationId: getBooking
+      tags: [bookings]
+      summary: Get booking by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Booking details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Booking"
+        "404":
+          description: Not found
+
+  /testimonials:
+    get:
+      operationId: listTestimonials
+      tags: [testimonials]
+      summary: List customer testimonials
+      responses:
+        "200":
+          description: List of testimonials
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Testimonial"
+
+  /stats:
+    get:
+      operationId: getSiteStats
+      tags: [stats]
+      summary: Get site-wide statistics
+      responses:
+        "200":
+          description: Site statistics
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SiteStats"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +193,145 @@ components:
       required:
         - status
 
+    Destination:
+      type: object
+      required:
+        - id
+        - name
+        - country
+        - category
+        - description
+        - imageUrl
+        - price
+        - rating
+        - reviewCount
+        - duration
+        - maxGroupSize
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        country:
+          type: string
+        category:
+          type: string
+        description:
+          type: string
+        imageUrl:
+          type: string
+        price:
+          type: number
+        rating:
+          type: number
+        reviewCount:
+          type: integer
+        duration:
+          type: integer
+        maxGroupSize:
+          type: integer
+        highlights:
+          type: ["string", "null"]
+
+    BookingInput:
+      type: object
+      required:
+        - destinationId
+        - fullName
+        - email
+        - travelers
+      properties:
+        destinationId:
+          type: integer
+        fullName:
+          type: string
+          minLength: 2
+        email:
+          type: string
+          format: email
+        travelers:
+          type: integer
+          minimum: 1
+        specialRequests:
+          type: ["string", "null"]
+
+    Booking:
+      type: object
+      required:
+        - id
+        - bookingRef
+        - destinationId
+        - destinationName
+        - fullName
+        - email
+        - travelers
+        - status
+        - totalPrice
+        - createdAt
+      properties:
+        id:
+          type: integer
+        bookingRef:
+          type: string
+        destinationId:
+          type: integer
+        destinationName:
+          type: string
+        destinationImageUrl:
+          type: ["string", "null"]
+        fullName:
+          type: string
+        email:
+          type: string
+        travelers:
+          type: integer
+        specialRequests:
+          type: ["string", "null"]
+        status:
+          type: string
+        totalPrice:
+          type: number
+        createdAt:
+          type: string
+
+    Testimonial:
+      type: object
+      required:
+        - id
+        - authorName
+        - rating
+        - comment
+        - destination
+        - createdAt
+      properties:
+        id:
+          type: integer
+        authorName:
+          type: string
+        authorAvatar:
+          type: ["string", "null"]
+        rating:
+          type: integer
+        comment:
+          type: string
+        destination:
+          type: string
+        createdAt:
+          type: string
+
+    SiteStats:
+      type: object
+      required:
+        - totalDestinations
+        - totalBookings
+        - totalCountries
+        - happyTravelers
+      properties:
+        totalDestinations:
+          type: integer
+        totalBookings:
+          type: integer
+        totalCountries:
+          type: integer
+        happyTravelers:
+          type: integer

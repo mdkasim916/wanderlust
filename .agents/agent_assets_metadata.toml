@@ -1,0 +1,44 @@
+uploads = []
+outputs = []
+
+[[generated]]
+id = "JyUXiJ9XjRbFZ1gYsbsVV"
+uri = "file://artifacts/travel-web/public/hero.png"
+type = "image"
+title = "tropical beach aerial magazine style"
+
+[[generated]]
+id = "lyzNt376NJB33u7EKeLfY"
+uri = "file://artifacts/travel-web/public/dest1.png"
+type = "image"
+title = "luxury villa maldives water"
+
+[[generated]]
+id = "eUtMmhBPuCO4ivk4dmKbw"
+uri = "file://artifacts/travel-web/public/dest2.png"
+type = "image"
+title = "machu picchu ruins dramatic"
+
+[[generated]]
+id = "q4uluPjYpE0Frc27wVEPo"
+uri = "file://artifacts/travel-web/public/dest3.png"
+type = "image"
+title = "hot air balloons sunrise"
+
+[[generated]]
+id = "QaWNyrT_mzD7MoXwPkjo6"
+uri = "file://artifacts/travel-web/public/dest4.png"
+type = "image"
+title = "kyoto autumn vibrant leaves"
+
+[[generated]]
+id = "fBub-GlGGSym7ZNhPdtve"
+uri = "file://artifacts/travel-web/public/dest5.png"
+type = "image"
+title = "safari golden hour tent"
+
+[[generated]]
+id = "j79l4-mv1-JNTAajuj_eC"
+uri = "file://artifacts/travel-web/public/dest6.png"
+type = "image"
+title = "amalfi coast seaside village"
