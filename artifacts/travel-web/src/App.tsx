@@ -7,6 +7,12 @@ import NotFound from "@/pages/not-found";
 import Home from "@/pages/home";
 import Destinations from "@/pages/destinations";
 import Dashboard from "@/pages/dashboard";
+import Packages from "@/pages/packages";
+import Gallery from "@/pages/gallery";
+import About from "@/pages/about";
+import Contact from "@/pages/contact";
+import Reviews from "@/pages/reviews";
+import MapPage from "@/pages/map";
 
 const queryClient = new QueryClient();
 
@@ -15,6 +21,12 @@ function Router() {
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/destinations" component={Destinations} />
+      <Route path="/packages" component={Packages} />
+      <Route path="/gallery" component={Gallery} />
+      <Route path="/about" component={About} />
+      <Route path="/contact" component={Contact} />
+      <Route path="/reviews" component={Reviews} />
+      <Route path="/map" component={MapPage} />
       <Route path="/dashboard" component={Dashboard} />
       <Route component={NotFound} />
     </Switch>
