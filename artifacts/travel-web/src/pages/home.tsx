@@ -3,10 +3,7 @@ import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { useListFeaturedDestinations, useListTestimonials, useGetSiteStats } from "@workspace/api-client-react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Card, CardContent } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Star, MapPin, Calendar, DollarSign, Search, Users, Globe2, Plane } from "lucide-react";
+import { Star, MapPin, Quote, ArrowRight, Plane, Globe, Camera } from "lucide-react";
 
 export default function Home() {
   const { data: featuredDestinations, isLoading: loadingFeatured } = useListFeaturedDestinations();
@@ -14,201 +11,175 @@ export default function Home() {
   const { data: stats, isLoading: loadingStats } = useGetSiteStats();
 
   return (
-    <div className="min-h-[100dvh] flex flex-col">
+    <div className="min-h-[100dvh] flex flex-col selection:bg-primary selection:text-primary-foreground">
       <Navbar />
       
       <main className="flex-1">
-        {/* Hero Section */}
-        <section className="relative h-[80vh] min-h-[600px] flex items-center justify-center overflow-hidden">
-          <div className="absolute inset-0 bg-black/40 z-10" />
+        {/* Cinematic Hero */}
+        <section className="relative h-[100dvh] min-h-[700px] flex items-end pb-24 lg:pb-32 overflow-hidden">
+          <div className="absolute inset-0 bg-black/30 z-10" />
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent z-10" />
+          
           <img 
             src="/hero.png" 
-            alt="Hero background" 
-            className="absolute inset-0 w-full h-full object-cover object-center"
+            alt="Majestic mountain landscape" 
+            className="absolute inset-0 w-full h-full object-cover object-center animate-in fade-in duration-[2000ms] zoom-in-105"
           />
-          <div className="container relative z-20 text-center text-white space-y-6 max-w-4xl mx-auto px-4 mt-16">
-            <Badge variant="outline" className="text-white border-white/30 backdrop-blur-sm bg-white/10 px-4 py-1.5 text-sm uppercase tracking-widest mb-4">
-              Discover the Extraordinary
-            </Badge>
-            <h1 className="text-5xl md:text-7xl font-serif font-bold leading-tight">
-              Journey Beyond <br/> The Ordinary
-            </h1>
-            <p className="text-lg md:text-xl text-white/90 max-w-2xl mx-auto font-light">
-              Curated luxury travel experiences for those who seek the exceptional. 
-              Explore handpicked destinations crafted for the modern explorer.
-            </p>
-            
-            {/* Search Bar */}
-            <div className="mt-12 bg-white/10 backdrop-blur-md p-2 rounded-2xl border border-white/20 shadow-2xl max-w-3xl mx-auto text-foreground">
-              <div className="bg-white rounded-xl p-2 grid grid-cols-1 md:grid-cols-4 gap-2 divide-y md:divide-y-0 md:divide-x divide-border">
-                <div className="flex items-center px-4 py-2">
-                  <MapPin className="text-muted-foreground mr-3 h-5 w-5" />
-                  <div className="flex-1">
-                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Where</p>
-                    <Input placeholder="Destination" className="border-0 p-0 h-auto focus-visible:ring-0 text-sm shadow-none" />
-                  </div>
-                </div>
-                <div className="flex items-center px-4 py-2">
-                  <Calendar className="text-muted-foreground mr-3 h-5 w-5" />
-                  <div className="flex-1">
-                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">When</p>
-                    <Input placeholder="Dates" className="border-0 p-0 h-auto focus-visible:ring-0 text-sm shadow-none" />
-                  </div>
-                </div>
-                <div className="flex items-center px-4 py-2">
-                  <DollarSign className="text-muted-foreground mr-3 h-5 w-5" />
-                  <div className="flex-1">
-                    <p className="text-xs font-semibold text-muted-foreground uppercase tracking-wider mb-1">Budget</p>
-                    <Input placeholder="Any" className="border-0 p-0 h-auto focus-visible:ring-0 text-sm shadow-none" />
-                  </div>
-                </div>
-                <div className="p-2 flex items-center justify-center">
-                  <Button asChild className="w-full h-12 rounded-lg text-base font-semibold shadow-lg hover-elevate">
-                    <Link href="/destinations">
-                      <Search className="mr-2 h-5 w-5" /> Search
-                    </Link>
-                  </Button>
-                </div>
+          
+          <div className="container relative z-20 px-6 mx-auto animate-in slide-in-from-bottom-8 fade-in duration-1000 delay-300 fill-mode-backwards">
+            <div className="max-w-4xl">
+              <p className="text-primary uppercase tracking-[0.3em] font-bold text-sm mb-6 flex items-center gap-4">
+                <span className="h-[2px] w-12 bg-primary"></span>
+                The Art of Travel
+              </p>
+              <h1 className="text-6xl md:text-8xl lg:text-9xl font-serif font-bold leading-[0.9] tracking-tighter text-primary-foreground mb-8">
+                Untamed <br /> Elegance.
+              </h1>
+              <p className="text-lg md:text-xl text-primary-foreground/80 max-w-2xl font-light mb-12 leading-relaxed">
+                Curating transcendent journeys for those who seek the extraordinary. Let the world's most spectacular landscapes become the canvas for your next chapter.
+              </p>
+              
+              <div className="flex flex-col sm:flex-row gap-6">
+                <Button asChild className="rounded-none px-10 py-7 text-sm tracking-widest uppercase font-bold bg-primary text-primary-foreground hover:bg-primary/90 transition-transform hover:translate-y-[-2px]">
+                  <Link href="/destinations">
+                    Explore Collection <ArrowRight className="ml-3 h-4 w-4" />
+                  </Link>
+                </Button>
               </div>
             </div>
           </div>
         </section>
 
-        {/* Featured Destinations */}
-        <section className="py-24 bg-background">
-          <div className="container">
-            <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
-              <div className="max-w-2xl">
-                <h2 className="text-4xl font-serif font-bold text-primary mb-4">Featured Collections</h2>
-                <p className="text-muted-foreground text-lg">Hand-selected experiences ranging from serene beach retreats to thrilling mountain adventures.</p>
+        {/* Stats Strip */}
+        <section className="bg-foreground text-background py-16 border-b border-background/10">
+          <div className="container px-6">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
+              <div className="space-y-2">
+                <p className="text-5xl font-serif text-primary">{stats?.totalDestinations || '100'}+</p>
+                <p className="text-xs uppercase tracking-widest font-mono text-background/50">Curated Locales</p>
               </div>
-              <Button asChild variant="outline" size="lg" className="shrink-0 group">
+              <div className="space-y-2">
+                <p className="text-5xl font-serif text-primary">{stats?.totalCountries || '45'}</p>
+                <p className="text-xs uppercase tracking-widest font-mono text-background/50">Countries</p>
+              </div>
+              <div className="space-y-2">
+                <p className="text-5xl font-serif text-primary">4.9</p>
+                <p className="text-xs uppercase tracking-widest font-mono text-background/50">Average Rating</p>
+              </div>
+              <div className="space-y-2">
+                <p className="text-5xl font-serif text-primary">{stats?.happyTravelers ? (stats.happyTravelers / 1000).toFixed(1) + 'k' : '10k'}</p>
+                <p className="text-xs uppercase tracking-widest font-mono text-background/50">Explorers</p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* The Collection - Editorial Grid */}
+        <section className="py-32 bg-background relative">
+          <div className="container px-6">
+            <div className="flex flex-col md:flex-row md:items-end justify-between mb-20 gap-8">
+              <div className="max-w-2xl">
+                <p className="text-primary uppercase tracking-[0.2em] font-bold text-xs mb-4">Featured Selection</p>
+                <h2 className="text-5xl md:text-6xl font-serif font-bold text-foreground leading-tight tracking-tight">
+                  Editor's Picks.
+                </h2>
+              </div>
+              <Button asChild variant="ghost" className="shrink-0 uppercase tracking-widest text-xs font-bold hover:bg-transparent hover:text-primary">
                 <Link href="/destinations">
-                  View All Destinations 
-                  <Plane className="ml-2 h-4 w-4 group-hover:translate-x-1 transition-transform" />
+                  View Full Gallery <ArrowRight className="ml-2 h-4 w-4" />
                 </Link>
               </Button>
             </div>
 
             {loadingFeatured ? (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {[1, 2, 3].map((i) => (
-                  <div key={i} className="rounded-2xl h-[400px] bg-muted animate-pulse" />
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
+                {[1, 2, 3].map((i, idx) => (
+                  <div key={i} className={`bg-muted animate-pulse ${idx === 0 ? 'md:col-span-8 h-[600px]' : idx === 1 ? 'md:col-span-4 h-[600px]' : 'md:col-span-12 h-[500px]'}`} />
                 ))}
               </div>
             ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                {featuredDestinations?.map((dest) => (
-                  <Link key={dest.id} href={`/destinations`} className="group block h-full">
-                    <Card className="overflow-hidden border-0 shadow-lg hover:shadow-xl transition-all duration-300 h-full flex flex-col hover:-translate-y-1">
-                      <div className="relative h-64 overflow-hidden">
-                        <img 
-                          src={`/dest${(dest.id % 6) + 1}.png`} 
-                          alt={dest.name}
-                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-                        />
-                        <div className="absolute top-4 left-4">
-                          <Badge className="bg-background/90 text-foreground backdrop-blur-sm hover:bg-background/90">
-                            {dest.category}
-                          </Badge>
-                        </div>
-                        <div className="absolute bottom-4 right-4 bg-background/90 backdrop-blur-sm px-3 py-1 rounded-full text-sm font-semibold flex items-center gap-1">
-                          <Star className="h-4 w-4 text-accent fill-accent" />
-                          <span>{dest.rating}</span>
+              <div className="grid grid-cols-1 md:grid-cols-12 gap-y-16 gap-x-8">
+                {featuredDestinations?.slice(0, 3).map((dest, idx) => {
+                  const isLarge = idx === 0;
+                  const isPortrait = idx === 1;
+                  const isWide = idx === 2;
+                  
+                  return (
+                    <Link key={dest.id} href={`/destinations`} className={`group block relative overflow-hidden ${isLarge ? 'md:col-span-8 h-[500px] md:h-[700px]' : isPortrait ? 'md:col-span-4 h-[500px] md:h-[700px]' : 'md:col-span-12 h-[500px]'}`}>
+                      <img 
+                        src={`/dest${(dest.id % 6) + 1}.png`} 
+                        alt={dest.name}
+                        className="w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-105"
+                      />
+                      <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-500" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-80" />
+                      
+                      <div className="absolute bottom-0 left-0 p-8 md:p-12 w-full">
+                        <p className="text-primary-foreground/70 uppercase tracking-widest text-xs font-bold mb-3 flex items-center gap-2">
+                          <MapPin className="h-3 w-3" /> {dest.country} • {dest.category}
+                        </p>
+                        <h3 className="font-serif text-4xl md:text-5xl font-bold text-primary-foreground mb-4">
+                          {dest.name}
+                        </h3>
+                        {isLarge && (
+                          <p className="text-primary-foreground/80 max-w-xl line-clamp-2 text-lg font-light mb-6 hidden md:block">
+                            {dest.description}
+                          </p>
+                        )}
+                        <div className="flex items-center gap-6 text-sm font-mono tracking-wider text-primary-foreground">
+                          <span>${dest.price.toLocaleString()}</span>
+                          <span className="flex items-center gap-1"><Star className="h-3 w-3 fill-primary text-primary" /> {dest.rating}</span>
                         </div>
                       </div>
-                      <CardContent className="p-6 flex-1 flex flex-col">
-                        <div className="flex justify-between items-start mb-2">
-                          <h3 className="font-serif text-2xl font-bold text-primary group-hover:text-accent transition-colors">
-                            {dest.name}
-                          </h3>
-                          <span className="text-xl font-bold text-primary shrink-0">${dest.price}</span>
-                        </div>
-                        <p className="text-sm font-medium text-muted-foreground flex items-center gap-1 mb-4">
-                          <MapPin className="h-4 w-4" /> {dest.country}
-                        </p>
-                        <p className="text-muted-foreground line-clamp-2 text-sm flex-1">
-                          {dest.description}
-                        </p>
-                        <div className="mt-6 pt-4 border-t flex justify-between text-sm font-medium text-muted-foreground">
-                          <span className="flex items-center gap-1"><Calendar className="h-4 w-4" /> {dest.duration} Days</span>
-                          <span className="flex items-center gap-1"><Users className="h-4 w-4" /> Max {dest.maxGroupSize}</span>
-                        </div>
-                      </CardContent>
-                    </Card>
-                  </Link>
-                ))}
+                    </Link>
+                  );
+                })}
               </div>
             )}
           </div>
         </section>
 
-        {/* Stats Section */}
-        <section className="py-20 bg-primary text-primary-foreground">
-          <div className="container">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 divide-x divide-primary-foreground/20">
-              <div className="text-center px-4">
-                <div className="flex justify-center mb-4"><Globe2 className="h-8 w-8 opacity-80" /></div>
-                <h4 className="text-4xl md:text-5xl font-serif font-bold mb-2">{stats?.totalCountries || '45'}+</h4>
-                <p className="text-primary-foreground/70 uppercase tracking-widest text-sm font-semibold">Countries</p>
-              </div>
-              <div className="text-center px-4">
-                <div className="flex justify-center mb-4"><MapPin className="h-8 w-8 opacity-80" /></div>
-                <h4 className="text-4xl md:text-5xl font-serif font-bold mb-2">{stats?.totalDestinations || '120'}+</h4>
-                <p className="text-primary-foreground/70 uppercase tracking-widest text-sm font-semibold">Destinations</p>
-              </div>
-              <div className="text-center px-4">
-                <div className="flex justify-center mb-4"><Users className="h-8 w-8 opacity-80" /></div>
-                <h4 className="text-4xl md:text-5xl font-serif font-bold mb-2">{stats?.happyTravelers ? (stats.happyTravelers / 1000).toFixed(1) + 'k' : '10k+'}</h4>
-                <p className="text-primary-foreground/70 uppercase tracking-widest text-sm font-semibold">Happy Travelers</p>
-              </div>
-              <div className="text-center px-4">
-                <div className="flex justify-center mb-4"><Star className="h-8 w-8 opacity-80" /></div>
-                <h4 className="text-4xl md:text-5xl font-serif font-bold mb-2">4.9</h4>
-                <p className="text-primary-foreground/70 uppercase tracking-widest text-sm font-semibold">Average Rating</p>
-              </div>
-            </div>
+        {/* Interstitial Quote */}
+        <section className="py-32 bg-secondary/30 relative overflow-hidden">
+          <div className="container px-6 relative z-10 text-center max-w-4xl mx-auto">
+            <Quote className="h-16 w-16 text-primary/30 mx-auto mb-8" />
+            <h2 className="text-3xl md:text-5xl font-serif font-light leading-snug text-foreground mb-8">
+              "Travel is the only thing you buy that makes you richer. WanderLux curates the wealth of the world into experiences you will never forget."
+            </h2>
+            <p className="uppercase tracking-widest text-sm font-bold text-muted-foreground">— The Editorial Team</p>
           </div>
         </section>
 
-        {/* Testimonials */}
-        <section className="py-24 bg-secondary">
-          <div className="container max-w-6xl">
-            <div className="text-center mb-16">
-              <h2 className="text-4xl font-serif font-bold text-primary mb-4">Traveler Stories</h2>
-              <p className="text-muted-foreground text-lg max-w-2xl mx-auto">Don't just take our word for it. Hear from those who have explored the world with WanderLux.</p>
+        {/* Voices */}
+        <section className="py-32 bg-foreground text-background">
+          <div className="container px-6">
+            <div className="text-center mb-24">
+              <p className="text-primary uppercase tracking-[0.2em] font-bold text-xs mb-4">Chronicles</p>
+              <h2 className="text-4xl md:text-5xl font-serif font-bold text-background mb-4">Traveler Stories.</h2>
             </div>
 
             {loadingTestimonials ? (
-              <div className="grid md:grid-cols-3 gap-8">
-                {[1, 2, 3].map(i => <div key={i} className="h-64 bg-background rounded-2xl animate-pulse" />)}
+              <div className="grid md:grid-cols-3 gap-12">
+                {[1, 2, 3].map(i => <div key={i} className="h-64 bg-background/5 animate-pulse" />)}
               </div>
             ) : (
-              <div className="grid md:grid-cols-3 gap-8">
-                {testimonials?.slice(0, 3).map((testimonial) => (
-                  <Card key={testimonial.id} className="bg-background border-none shadow-md">
-                    <CardContent className="p-8">
-                      <div className="flex gap-1 mb-6">
-                        {Array.from({ length: testimonial.rating }).map((_, i) => (
-                          <Star key={i} className="h-5 w-5 text-accent fill-accent" />
-                        ))}
-                      </div>
-                      <p className="text-lg font-serif italic mb-8 relative">
-                        <span className="text-4xl text-muted/50 absolute -top-4 -left-2 leading-none">"</span>
-                        {testimonial.comment}
-                        <span className="text-4xl text-muted/50 absolute -bottom-4 -right-2 leading-none">"</span>
-                      </p>
-                      <div className="flex items-center gap-4 pt-6 border-t">
-                        <div className="h-12 w-12 rounded-full bg-primary/10 flex items-center justify-center text-primary font-bold text-xl">
-                          {testimonial.authorName.charAt(0)}
-                        </div>
-                        <div>
-                          <p className="font-bold text-primary">{testimonial.authorName}</p>
-                          <p className="text-sm text-muted-foreground text-accent">{testimonial.destination}</p>
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
+              <div className="grid md:grid-cols-3 gap-12 lg:gap-16">
+                {testimonials?.slice(0, 3).map((testimonial, idx) => (
+                  <div key={testimonial.id} className="relative">
+                    <div className="text-primary text-6xl font-serif absolute -top-10 -left-6 opacity-20">{(idx + 1).toString().padStart(2, '0')}</div>
+                    <div className="flex gap-1 mb-8">
+                      {Array.from({ length: testimonial.rating }).map((_, i) => (
+                        <Star key={i} className="h-4 w-4 text-primary fill-primary" />
+                      ))}
+                    </div>
+                    <p className="text-lg font-light leading-relaxed mb-10 text-background/80 line-clamp-4">
+                      "{testimonial.comment}"
+                    </p>
+                    <div className="border-t border-background/10 pt-6">
+                      <p className="font-bold uppercase tracking-widest text-xs mb-1">{testimonial.authorName}</p>
+                      <p className="text-sm font-serif italic text-background/50">Explored {testimonial.destination}</p>
+                    </div>
+                  </div>
                 ))}
               </div>
             )}
