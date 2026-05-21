@@ -9,7 +9,7 @@ import psycopg2
 import psycopg2.extras
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+from pydantic import BaseModel, EmailStr, field_validator
 
 DATABASE_URL = os.environ.get("DATABASE_URL")
 
@@ -66,7 +66,7 @@ class DestinationOut(BaseModel):
 class BookingInput(BaseModel):
     destinationId: int
     fullName: str
-    email: str
+    email: EmailStr
     phone: str
     adults: int
     children: int = 0
@@ -74,6 +74,16 @@ class BookingInput(BaseModel):
     checkOut: str
     roomType: str = "Standard"
     specialRequests: Optional[str] = None
+
+    @field_validator("email", mode="before")
+    @classmethod
+    def validate_email_format(cls, v: str) -> str:
+        return v.strip().lower()
+
+    @field_validator("fullName", mode="before")
+    @classmethod
+    def validate_full_name(cls, v: str) -> str:
+        return v.strip()
 
 
 class BookingOut(BaseModel):
