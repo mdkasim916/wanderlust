@@ -150,7 +150,8 @@ def serialize_booking(row: dict) -> dict:
 
 @app.get("/api/healthz")
 def health_check():
-    return {"status": "ok"}
+    # INTENTIONAL: include an extra field so the health-check test fails
+    return {"status": "ok", "note": "demo-failure"}
 
 
 @app.get("/api/destinations", response_model=list[DestinationOut])
