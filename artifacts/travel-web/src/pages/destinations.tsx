@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { Link } from "wouter";
 import { Navbar } from "@/components/layout/navbar";
 import { Footer } from "@/components/layout/footer";
 import { BookingModal } from "@/components/booking-modal";
@@ -10,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Slider } from "@/components/ui/slider";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Star, MapPin, Calendar, Users, Search, SlidersHorizontal, ArrowRight } from "lucide-react";
+import { Star, MapPin, Calendar, Users, Search, SlidersHorizontal, ArrowRight, Eye } from "lucide-react";
 
 const CATEGORIES = ["Adventure", "Cultural", "Luxury", "Trekking", "Beach"];
 
@@ -164,12 +165,14 @@ export default function Destinations() {
               <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
                 {destinations?.map((dest) => (
                   <Card key={dest.id} className="overflow-hidden border-0 shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col group">
-                    <div className="relative h-56 overflow-hidden">
+                    <Link href={`/destinations/${dest.id}`} className="relative h-56 overflow-hidden block">
                       <img 
-                        src={`/dest${(dest.id % 6) + 1}.png`} 
+                        src={dest.imageUrl} 
                         alt={dest.name}
                         className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+                        onError={(e) => { (e.target as HTMLImageElement).src = `https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=800&q=80`; }}
                       />
+                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors duration-300" />
                       <div className="absolute top-4 left-4">
                         <Badge className="bg-background/90 text-foreground backdrop-blur-sm hover:bg-background/90 font-semibold shadow-sm">
                           {dest.category}
@@ -179,14 +182,16 @@ export default function Destinations() {
                         <Star className="h-4 w-4 text-accent fill-accent" />
                         <span>{dest.rating} <span className="text-muted-foreground font-normal text-xs">({dest.reviewCount})</span></span>
                       </div>
-                    </div>
+                    </Link>
                     <CardContent className="p-6 flex-1 flex flex-col">
                       <div className="flex justify-between items-start mb-2 gap-4">
-                        <h3 className="font-serif text-2xl font-bold text-primary leading-tight">
-                          {dest.name}
-                        </h3>
+                        <Link href={`/destinations/${dest.id}`}>
+                          <h3 className="font-serif text-2xl font-bold text-primary leading-tight hover:underline underline-offset-4 decoration-primary/40">
+                            {dest.name}
+                          </h3>
+                        </Link>
                         <div className="text-right shrink-0">
-                          <span className="text-2xl font-bold text-primary block">${dest.price}</span>
+                          <span className="text-2xl font-bold text-primary block">${dest.price.toLocaleString()}</span>
                           <span className="text-xs text-muted-foreground uppercase tracking-wider">Per Person</span>
                         </div>
                       </div>
@@ -195,7 +200,7 @@ export default function Destinations() {
                         <MapPin className="h-4 w-4" /> {dest.country}
                       </p>
                       
-                      <p className="text-muted-foreground text-sm flex-1 mb-6">
+                      <p className="text-muted-foreground text-sm flex-1 mb-6 line-clamp-3">
                         {dest.description}
                       </p>
                       
@@ -204,13 +209,23 @@ export default function Destinations() {
                         <span className="flex items-center gap-2"><Users className="h-4 w-4 text-primary" /> Max {dest.maxGroupSize}</span>
                       </div>
 
-                      <Button 
-                        className="w-full group-hover:bg-accent group-hover:text-accent-foreground transition-colors hover-elevate-2" 
-                        size="lg"
-                        onClick={() => setBookingModal({ open: true, destId: dest.id, name: dest.name, price: dest.price })}
-                      >
-                        Book Now <ArrowRight className="ml-2 h-4 w-4" />
-                      </Button>
+                      <div className="flex gap-3">
+                        <Button
+                          asChild
+                          variant="outline"
+                          className="flex-1 rounded-none text-xs uppercase tracking-widest font-bold"
+                        >
+                          <Link href={`/destinations/${dest.id}`}>
+                            <Eye className="mr-1.5 h-3.5 w-3.5" /> View Details
+                          </Link>
+                        </Button>
+                        <Button 
+                          className="flex-1 rounded-none text-xs uppercase tracking-widest font-bold" 
+                          onClick={() => setBookingModal({ open: true, destId: dest.id, name: dest.name, price: dest.price })}
+                        >
+                          Book Now <ArrowRight className="ml-1.5 h-3.5 w-3.5" />
+                        </Button>
+                      </div>
                     </CardContent>
                   </Card>
                 ))}

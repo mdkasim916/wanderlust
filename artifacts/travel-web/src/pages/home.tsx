@@ -102,14 +102,14 @@ export default function Home() {
                 {featuredDestinations?.slice(0, 3).map((dest, idx) => {
                   const isLarge = idx === 0;
                   const isPortrait = idx === 1;
-                  const isWide = idx === 2;
                   
                   return (
-                    <Link key={dest.id} href={`/destinations`} className={`group block relative overflow-hidden ${isLarge ? 'md:col-span-8 h-[500px] md:h-[700px]' : isPortrait ? 'md:col-span-4 h-[500px] md:h-[700px]' : 'md:col-span-12 h-[500px]'}`}>
+                    <Link key={dest.id} href={`/destinations/${dest.id}`} className={`group block relative overflow-hidden ${isLarge ? 'md:col-span-8 h-[500px] md:h-[700px]' : isPortrait ? 'md:col-span-4 h-[500px] md:h-[700px]' : 'md:col-span-12 h-[500px]'}`}>
                       <img 
-                        src={`/dest${(dest.id % 6) + 1}.png`} 
+                        src={dest.imageUrl}
                         alt={dest.name}
                         className="w-full h-full object-cover transition-transform duration-[1.5s] group-hover:scale-105"
+                        onError={(e) => { (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=1200&q=80'; }}
                       />
                       <div className="absolute inset-0 bg-black/20 group-hover:bg-black/40 transition-colors duration-500" />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-80" />

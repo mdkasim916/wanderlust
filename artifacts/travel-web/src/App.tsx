@@ -6,6 +6,7 @@ import NotFound from "@/pages/not-found";
 
 import Home from "@/pages/home";
 import Destinations from "@/pages/destinations";
+import DestinationDetail from "@/pages/destination-detail";
 import Dashboard from "@/pages/dashboard";
 import Packages from "@/pages/packages";
 import Gallery from "@/pages/gallery";
@@ -14,13 +15,21 @@ import Contact from "@/pages/contact";
 import Reviews from "@/pages/reviews";
 import MapPage from "@/pages/map";
 
-const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      staleTime: 1000 * 60 * 5,
+      retry: 2,
+    },
+  },
+});
 
 function Router() {
   return (
     <Switch>
       <Route path="/" component={Home} />
       <Route path="/destinations" component={Destinations} />
+      <Route path="/destinations/:id" component={DestinationDetail} />
       <Route path="/packages" component={Packages} />
       <Route path="/gallery" component={Gallery} />
       <Route path="/about" component={About} />
