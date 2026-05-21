@@ -53,6 +53,7 @@ const CATEGORY_COLORS: Record<string, string> = {
 export default function MapPage() {
   const { data: destinations, isLoading } = useListDestinations();
   const { data: stats } = useGetSiteStats();
+  const destinationList = Array.isArray(destinations) ? destinations : [];
   const [selectedId, setSelectedId] = useState<number | null>(null);
   const [mapCenter, setMapCenter] = useState<[number, number]>([20, 10]);
   const [mapZoom, setMapZoom] = useState(2);
@@ -99,7 +100,7 @@ export default function MapPage() {
         <div className="w-full lg:w-96 shrink-0 border-r border-border/30 overflow-y-auto order-2 lg:order-1" style={{ maxHeight: '70vh', minHeight: '200px' }}>
           <div className="sticky top-0 bg-card/95 backdrop-blur px-4 py-3 border-b border-border/30 z-10">
             <h3 className="text-xs font-bold uppercase tracking-widest text-muted-foreground">
-              {destinations?.length ?? 0} Destinations
+              {destinationList.length} Destinations
             </h3>
           </div>
 
@@ -114,7 +115,7 @@ export default function MapPage() {
                     </div>
                   </div>
                 ))
-              : destinations?.map((dest) => {
+              : destinationList.map((dest) => {
                   const hasCoords = !!DESTINATION_COORDS[dest.name];
                   const isSelected = selectedId === dest.id;
                   return (
@@ -191,7 +192,7 @@ export default function MapPage() {
               <FlyTo center={flyTarget.center} zoom={flyTarget.zoom} />
             )}
 
-            {destinations?.map((dest) => {
+            {destinationList.map((dest) => {
               const coords = DESTINATION_COORDS[dest.name];
               if (!coords) return null;
               const color = CATEGORY_COLORS[dest.category] ?? "#e07b5a";

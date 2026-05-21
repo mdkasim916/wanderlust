@@ -9,6 +9,8 @@ export default function Home() {
   const { data: featuredDestinations, isLoading: loadingFeatured } = useListFeaturedDestinations();
   const { data: testimonials, isLoading: loadingTestimonials } = useListTestimonials();
   const { data: stats, isLoading: loadingStats } = useGetSiteStats();
+  const featuredList = Array.isArray(featuredDestinations) ? featuredDestinations : [];
+  const testimonialList = Array.isArray(testimonials) ? testimonials : [];
 
   return (
     <div className="min-h-[100dvh] flex flex-col selection:bg-primary selection:text-primary-foreground">
@@ -99,7 +101,7 @@ export default function Home() {
               </div>
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-12 gap-y-16 gap-x-8">
-                {featuredDestinations?.slice(0, 3).map((dest, idx) => {
+                {featuredList.slice(0, 3).map((dest, idx) => {
                   const isLarge = idx === 0;
                   const isPortrait = idx === 1;
                   
@@ -164,7 +166,7 @@ export default function Home() {
               </div>
             ) : (
               <div className="grid md:grid-cols-3 gap-12 lg:gap-16">
-                {testimonials?.slice(0, 3).map((testimonial, idx) => (
+                {testimonialList.slice(0, 3).map((testimonial, idx) => (
                   <div key={testimonial.id} className="relative">
                     <div className="text-primary text-6xl font-serif absolute -top-10 -left-6 opacity-20">{(idx + 1).toString().padStart(2, '0')}</div>
                     <div className="flex gap-1 mb-8">

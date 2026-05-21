@@ -13,10 +13,11 @@ export default function Packages() {
   const [bookingModal, setBookingModal] = useState<{ open: boolean; destId?: number; name?: string; price?: number }>({
     open: false,
   });
+  const destinationList = Array.isArray(destinations) ? destinations : [];
 
-  const explorerPkgs = destinations?.filter(d => d.price <= 1800) || [];
-  const signaturePkgs = destinations?.filter(d => d.price > 1800 && d.price <= 3000) || [];
-  const elitePkgs = destinations?.filter(d => d.price > 3000) || [];
+  const explorerPkgs = destinationList.filter(d => d.price <= 1800);
+  const signaturePkgs = destinationList.filter(d => d.price > 1800 && d.price <= 3000);
+  const elitePkgs = destinationList.filter(d => d.price > 3000);
 
   return (
     <div className="min-h-[100dvh] flex flex-col bg-background">

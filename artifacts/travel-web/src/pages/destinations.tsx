@@ -33,6 +33,7 @@ export default function Destinations() {
     category: categoryParam,
     maxPrice: priceRange[0],
   });
+  const destinationList = Array.isArray(destinations) ? destinations : [];
 
   const toggleCategory = (category: string) => {
     setSelectedCategories(prev => 
@@ -142,7 +143,7 @@ export default function Destinations() {
                   <div key={i} className="rounded-xl h-[450px] bg-muted animate-pulse" />
                 ))}
               </div>
-            ) : destinations?.length === 0 ? (
+            ) : destinationList.length === 0 ? (
               <div className="flex flex-col items-center justify-center py-20 text-center bg-background rounded-xl border border-dashed">
                 <MapPin className="h-12 w-12 text-muted-foreground mb-4 opacity-50" />
                 <h3 className="text-2xl font-serif font-bold text-primary mb-2">No destinations found</h3>
@@ -163,7 +164,7 @@ export default function Destinations() {
               </div>
             ) : (
               <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
-                {destinations?.map((dest) => (
+                {destinationList.map((dest) => (
                   <Card key={dest.id} className="overflow-hidden border-0 shadow-sm hover:shadow-lg transition-all duration-300 flex flex-col group">
                     <Link href={`/destinations/${dest.id}`} className="relative h-56 overflow-hidden block">
                       <img 

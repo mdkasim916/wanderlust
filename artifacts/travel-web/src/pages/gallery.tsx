@@ -12,8 +12,9 @@ export default function Gallery() {
   const { data: destinations, isLoading } = useListDestinations();
   const [activeCategory, setActiveCategory] = useState("All");
   const [selectedImage, setSelectedImage] = useState<{ src: string; dest: Destination } | null>(null);
+  const destinationList = Array.isArray(destinations) ? destinations : [];
 
-  const filteredDestinations = destinations?.filter(
+  const filteredDestinations = destinationList.filter(
     (dest) => activeCategory === "All" || dest.category === activeCategory
   ) || [];
 

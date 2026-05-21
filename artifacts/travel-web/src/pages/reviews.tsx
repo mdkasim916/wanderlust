@@ -7,6 +7,7 @@ import { Badge } from "@/components/ui/badge";
 
 export default function Reviews() {
   const { data: testimonials, isLoading } = useListTestimonials();
+  const testimonialList = Array.isArray(testimonials) ? testimonials : [];
 
   const blogPosts = [
     {
@@ -78,7 +79,7 @@ export default function Reviews() {
                 </div>
               ) : (
                 <div className="grid md:grid-cols-2 gap-8">
-                  {testimonials?.map((review) => (
+                  {testimonialList.map((review) => (
                     <div key={review.id} className="bg-card border border-border/50 p-8 md:p-10 relative">
                       <Quote className="absolute top-8 right-8 h-12 w-12 text-primary/10" />
                       <div className="flex gap-1 mb-6">

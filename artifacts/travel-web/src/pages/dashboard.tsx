@@ -50,6 +50,7 @@ const ROOM_ICONS: Record<string, string> = {
 
 export default function Dashboard() {
   const { data: bookings, isLoading } = useListBookings();
+  const bookingList = Array.isArray(bookings) ? bookings : [];
 
   return (
     <div className="min-h-[100dvh] flex flex-col bg-muted/30">
@@ -62,8 +63,8 @@ export default function Dashboard() {
             <h1 className="text-3xl md:text-4xl font-serif font-bold">My Bookings</h1>
           </div>
           <p className="text-primary-foreground/70 text-sm">
-            {bookings?.length
-              ? `You have ${bookings.length} booking${bookings.length !== 1 ? "s" : ""}.`
+            {bookingList.length
+              ? `You have ${bookingList.length} booking${bookingList.length !== 1 ? "s" : ""}.`
               : "Manage your upcoming adventures from one place."}
           </p>
         </div>
@@ -83,7 +84,7 @@ export default function Dashboard() {
               </Card>
             ))}
           </div>
-        ) : bookings?.length === 0 ? (
+        ) : bookingList.length === 0 ? (
           <Card className="border-dashed bg-background shadow-none">
             <CardContent className="flex flex-col items-center justify-center py-20 text-center">
               <div className="h-20 w-20 bg-muted rounded-full flex items-center justify-center mb-6">
@@ -100,7 +101,7 @@ export default function Dashboard() {
           </Card>
         ) : (
           <div className="space-y-6">
-            {bookings?.map((booking) => {
+            {bookingList.map((booking) => {
               const roomIcon = ROOM_ICONS[booking.roomType] ?? "🛏️";
               return (
                 <Card key={booking.id} className="overflow-hidden border border-border/50 shadow-sm hover:shadow-md transition-shadow">
