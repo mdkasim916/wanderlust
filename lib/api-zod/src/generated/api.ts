@@ -3,7 +3,7 @@
  * Do not edit manually.
  * Api
  * Travel Website API
- * OpenAPI spec version: 0.1.0
+ * OpenAPI spec version: 0.2.0
  */
 import * as zod from 'zod';
 
@@ -97,9 +97,18 @@ export const ListBookingsResponseItem = zod.object({
   "destinationImageUrl": zod.string().nullish(),
   "fullName": zod.string(),
   "email": zod.string(),
+  "phone": zod.string(),
+  "adults": zod.number(),
+  "children": zod.number(),
+  "checkIn": zod.string(),
+  "checkOut": zod.string(),
+  "roomType": zod.string(),
+  "nights": zod.number(),
   "travelers": zod.number(),
   "specialRequests": zod.string().nullish(),
   "status": zod.string(),
+  "basePrice": zod.number(),
+  "taxAmount": zod.number(),
   "totalPrice": zod.number(),
   "createdAt": zod.string()
 })
@@ -111,6 +120,10 @@ export const ListBookingsResponse = zod.array(ListBookingsResponseItem)
  */
 export const createBookingBodyFullNameMin = 2;
 
+export const createBookingBodyPhoneMin = 7;
+
+
+export const createBookingBodyChildrenMin = 0;
 
 
 
@@ -118,7 +131,12 @@ export const CreateBookingBody = zod.object({
   "destinationId": zod.number(),
   "fullName": zod.string().min(createBookingBodyFullNameMin),
   "email": zod.string().email(),
-  "travelers": zod.number().min(1),
+  "phone": zod.string().min(createBookingBodyPhoneMin),
+  "adults": zod.number().min(1),
+  "children": zod.number().min(createBookingBodyChildrenMin).optional(),
+  "checkIn": zod.string().describe('Check-in date (YYYY-MM-DD)'),
+  "checkOut": zod.string().describe('Check-out date (YYYY-MM-DD)'),
+  "roomType": zod.string().describe('Room type: Standard, Deluxe, Suite, or Villa'),
   "specialRequests": zod.string().nullish()
 })
 
@@ -138,9 +156,18 @@ export const GetBookingResponse = zod.object({
   "destinationImageUrl": zod.string().nullish(),
   "fullName": zod.string(),
   "email": zod.string(),
+  "phone": zod.string(),
+  "adults": zod.number(),
+  "children": zod.number(),
+  "checkIn": zod.string(),
+  "checkOut": zod.string(),
+  "roomType": zod.string(),
+  "nights": zod.number(),
   "travelers": zod.number(),
   "specialRequests": zod.string().nullish(),
   "status": zod.string(),
+  "basePrice": zod.number(),
+  "taxAmount": zod.number(),
   "totalPrice": zod.number(),
   "createdAt": zod.string()
 })

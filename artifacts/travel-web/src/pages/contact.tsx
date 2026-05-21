@@ -191,7 +191,7 @@ export default function Contact() {
               </div>
 
               {/* Map */}
-              <div className="flex-1 min-h-[300px] border border-border/50 relative overflow-hidden bg-muted">
+              <div className="flex-1 min-h-[300px] border border-border/50 relative overflow-hidden bg-muted" style={{ isolation: "isolate", zIndex: 0 }}>
                 <MapContainer 
                   center={[-8.4095, 115.1889]} 
                   zoom={10} 

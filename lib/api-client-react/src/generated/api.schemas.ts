@@ -3,7 +3,7 @@
  * Do not edit manually.
  * Api
  * Travel Website API
- * OpenAPI spec version: 0.1.0
+ * OpenAPI spec version: 0.2.0
  */
 export interface HealthStatus {
   status: string;
@@ -30,8 +30,18 @@ export interface BookingInput {
   /** @minLength 2 */
   fullName: string;
   email: string;
+  /** @minLength 7 */
+  phone: string;
   /** @minimum 1 */
-  travelers: number;
+  adults: number;
+  /** @minimum 0 */
+  children?: number;
+  /** Check-in date (YYYY-MM-DD) */
+  checkIn: string;
+  /** Check-out date (YYYY-MM-DD) */
+  checkOut: string;
+  /** Room type: Standard, Deluxe, Suite, or Villa */
+  roomType: string;
   /** @nullable */
   specialRequests?: string | null;
 }
@@ -45,10 +55,19 @@ export interface Booking {
   destinationImageUrl?: string | null;
   fullName: string;
   email: string;
+  phone: string;
+  adults: number;
+  children: number;
+  checkIn: string;
+  checkOut: string;
+  roomType: string;
+  nights: number;
   travelers: number;
   /** @nullable */
   specialRequests?: string | null;
   status: string;
+  basePrice: number;
+  taxAmount: number;
   totalPrice: number;
   createdAt: string;
 }

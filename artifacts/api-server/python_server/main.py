@@ -2,15 +2,24 @@ import os
 import random
 import string
 from contextlib import asynccontextmanager
+from datetime import date, datetime
 from typing import Optional
 
 import psycopg2
 import psycopg2.extras
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel, EmailStr
+from pydantic import BaseModel
 
 DATABASE_URL = os.environ.get("DATABASE_URL")
+
+ROOM_MULTIPLIERS = {
+    "Standard": 1.0,
+    "Deluxe": 1.4,
+    "Suite": 2.0,
+    "Villa": 3.2,
+}
+TAX_RATE = 0.12
 
 
 def get_conn():
@@ -58,7 +67,12 @@ class BookingInput(BaseModel):
     destinationId: int
     fullName: str
     email: str
-    travelers: int
+    phone: str
+    adults: int
+    children: int = 0
+    checkIn: str
+    checkOut: str
+    roomType: str = "Standard"
     specialRequests: Optional[str] = None
 
 
@@ -70,9 +84,18 @@ class BookingOut(BaseModel):
     destinationImageUrl: Optional[str] = None
     fullName: str
     email: str
+    phone: str
+    adults: int
+    children: int
     travelers: int
+    checkIn: str
+    checkOut: str
+    roomType: str
+    nights: int
     specialRequests: Optional[str] = None
     status: str
+    basePrice: float
+    taxAmount: float
     totalPrice: float
     createdAt: str
 
@@ -92,6 +115,25 @@ class SiteStats(BaseModel):
     totalBookings: int
     totalCountries: int
     happyTravelers: int
+
+
+# ---------- Helpers ----------
+
+def compute_nights(check_in: str, check_out: str) -> int:
+    try:
+        d1 = date.fromisoformat(check_in)
+        d2 = date.fromisoformat(check_out)
+        delta = (d2 - d1).days
+        return max(1, delta)
+    except Exception:
+        return 1
+
+
+def serialize_booking(row: dict) -> dict:
+    d = dict(row)
+    if isinstance(d.get("createdAt"), (datetime, date)):
+        d["createdAt"] = d["createdAt"].isoformat()
+    return d
 
 
 # ---------- Routes ----------
@@ -132,8 +174,7 @@ def list_destinations(
             params.append(f"%{search}%")
         query += " ORDER BY rating DESC"
         cur.execute(query, params)
-        rows = cur.fetchall()
-        return [dict(r) for r in rows]
+        return [dict(r) for r in cur.fetchall()]
     finally:
         conn.close()
 
@@ -182,18 +223,15 @@ def list_bookings():
             SELECT id, booking_ref as "bookingRef", destination_id as "destinationId",
                    destination_name as "destinationName",
                    destination_image_url as "destinationImageUrl",
-                   full_name as "fullName", email, travelers,
-                   special_requests as "specialRequests", status, total_price as "totalPrice",
-                   created_at as "createdAt"
+                   full_name as "fullName", email, phone, adults, children, travelers,
+                   check_in as "checkIn", check_out as "checkOut",
+                   room_type as "roomType", nights,
+                   special_requests as "specialRequests", status,
+                   base_price as "basePrice", tax_amount as "taxAmount",
+                   total_price as "totalPrice", created_at as "createdAt"
             FROM bookings ORDER BY created_at DESC
         """)
-        rows = cur.fetchall()
-        result = []
-        for r in rows:
-            d = dict(r)
-            d["createdAt"] = d["createdAt"].isoformat()
-            result.append(d)
-        return result
+        return [serialize_booking(dict(r)) for r in cur.fetchall()]
     finally:
         conn.close()
 
@@ -202,8 +240,16 @@ def list_bookings():
 def create_booking(body: BookingInput):
     if len(body.fullName.strip()) < 2:
         raise HTTPException(status_code=400, detail="Full name must be at least 2 characters")
-    if body.travelers < 1:
-        raise HTTPException(status_code=400, detail="Travelers must be at least 1")
+    if body.adults < 1:
+        raise HTTPException(status_code=400, detail="Must have at least 1 adult")
+    if len(body.phone.strip()) < 7:
+        raise HTTPException(status_code=400, detail="Please enter a valid phone number")
+    if body.roomType not in ROOM_MULTIPLIERS:
+        raise HTTPException(status_code=400, detail="Invalid room type")
+
+    nights = compute_nights(body.checkIn, body.checkOut)
+    travelers = body.adults + (body.children or 0)
+    multiplier = ROOM_MULTIPLIERS[body.roomType]
 
     conn = get_conn()
     try:
@@ -216,30 +262,37 @@ def create_booking(body: BookingInput):
         if not dest:
             raise HTTPException(status_code=400, detail="Destination not found")
 
-        total_price = dest["price"] * body.travelers
+        base_price = dest["price"] * travelers * nights * multiplier
+        tax_amount = round(base_price * TAX_RATE, 2)
+        total_price = round(base_price + tax_amount, 2)
+        base_price = round(base_price, 2)
         booking_ref = generate_booking_ref()
 
         cur.execute("""
             INSERT INTO bookings
               (booking_ref, destination_id, destination_name, destination_image_url,
-               full_name, email, travelers, special_requests, status, total_price)
-            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, 'confirmed', %s)
+               full_name, email, phone, adults, children, travelers,
+               check_in, check_out, room_type, nights,
+               special_requests, status, base_price, tax_amount, total_price)
+            VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, 'confirmed', %s, %s, %s)
             RETURNING id, booking_ref as "bookingRef", destination_id as "destinationId",
                       destination_name as "destinationName",
                       destination_image_url as "destinationImageUrl",
-                      full_name as "fullName", email, travelers,
+                      full_name as "fullName", email, phone, adults, children, travelers,
+                      check_in as "checkIn", check_out as "checkOut",
+                      room_type as "roomType", nights,
                       special_requests as "specialRequests", status,
+                      base_price as "basePrice", tax_amount as "taxAmount",
                       total_price as "totalPrice", created_at as "createdAt"
         """, (
             booking_ref, body.destinationId, dest["name"], dest["image_url"],
-            body.fullName, body.email, body.travelers,
-            body.specialRequests, total_price
+            body.fullName, body.email, body.phone,
+            body.adults, body.children or 0, travelers,
+            body.checkIn, body.checkOut, body.roomType, nights,
+            body.specialRequests, base_price, tax_amount, total_price
         ))
         conn.commit()
-        row = cur.fetchone()
-        d = dict(row)
-        d["createdAt"] = d["createdAt"].isoformat()
-        return d
+        return serialize_booking(dict(cur.fetchone()))
     finally:
         conn.close()
 
@@ -253,17 +306,18 @@ def get_booking(booking_id: int):
             SELECT id, booking_ref as "bookingRef", destination_id as "destinationId",
                    destination_name as "destinationName",
                    destination_image_url as "destinationImageUrl",
-                   full_name as "fullName", email, travelers,
-                   special_requests as "specialRequests", status, total_price as "totalPrice",
-                   created_at as "createdAt"
+                   full_name as "fullName", email, phone, adults, children, travelers,
+                   check_in as "checkIn", check_out as "checkOut",
+                   room_type as "roomType", nights,
+                   special_requests as "specialRequests", status,
+                   base_price as "basePrice", tax_amount as "taxAmount",
+                   total_price as "totalPrice", created_at as "createdAt"
             FROM bookings WHERE id = %s
         """, (booking_id,))
         row = cur.fetchone()
         if not row:
             raise HTTPException(status_code=404, detail="Booking not found")
-        d = dict(row)
-        d["createdAt"] = d["createdAt"].isoformat()
-        return d
+        return serialize_booking(dict(row))
     finally:
         conn.close()
 
@@ -278,13 +332,7 @@ def list_testimonials():
                    rating, comment, destination, created_at as "createdAt"
             FROM testimonials ORDER BY created_at DESC
         """)
-        rows = cur.fetchall()
-        result = []
-        for r in rows:
-            d = dict(r)
-            d["createdAt"] = d["createdAt"].isoformat()
-            result.append(d)
-        return result
+        return [serialize_booking(dict(r)) for r in cur.fetchall()]
     finally:
         conn.close()
 

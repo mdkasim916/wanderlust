@@ -3,7 +3,7 @@
  * Do not edit manually.
  * Api
  * Travel Website API
- * OpenAPI spec version: 0.1.0
+ * OpenAPI spec version: 0.2.0
  */
 
 export interface Booking {
@@ -15,10 +15,19 @@ export interface Booking {
   destinationImageUrl?: string | null;
   fullName: string;
   email: string;
+  phone: string;
+  adults: number;
+  children: number;
+  checkIn: string;
+  checkOut: string;
+  roomType: string;
+  nights: number;
   travelers: number;
   /** @nullable */
   specialRequests?: string | null;
   status: string;
+  basePrice: number;
+  taxAmount: number;
   totalPrice: number;
   createdAt: string;
 }
